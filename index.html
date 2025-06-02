@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSG AI Readiness Audit | LinkedInsight</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            /* LinkedInsight Light Theme Colors */
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F5F5F5;
+            --bg-tertiary: #EDEDED;
+            --bg-window: rgb(237, 237, 237);
+            
+            --text-primary: #0A0A0A;
+            --text-secondary: #737373;
+            --text-tertiary: #A6A6A6;
+            
+            --border-primary: #000000;
+            --border-subtle: #E5E5E5;
+            
+            --button-primary-bg: #000000;
+            --button-primary-text: #FFFFFF;
+            --button-secondary-bg: #F5F5F5;
+            --button-secondary-text: #0A0A0A;
+            
+            --shadow-color: hsl(0, 0%, 30%);
+        }
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            background-image: radial-gradient(circle, rgba(0,0,0,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .font-mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        
+        .font-heading {
+            font-family: 'Archivo', sans-serif;
+        }
+        
+        /* LinkedInsight Shadow Container */
+        .shadow-container {
+            background-color: var(--bg-primary);
+            border: 2px solid var(--border-primary);
+            box-shadow: 7px 7px 0px 0px var(--shadow-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: calc(7px + 1rem);
+            margin-right: 7px;
+            transition: all 250ms ease;
+        }
+        
+        .shadow-container:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 9px 9px 0px 0px var(--shadow-color);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--button-primary-bg);
+            color: var(--button-primary-text);
+            border: 2px solid var(--border-primary);
+            border-radius: 0.375rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 150ms ease;
+            box-shadow: 4px 4px 0px 0px var(--shadow-color);
+        }
+        
+        .btn-primary:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0px 0px var(--shadow-color);
+        }
+        
+        .btn-secondary {
+            background-color: var(--button-secondary-bg);
+            color: var(--button-secondary-text);
+            border: 2px solid var(--border-primary);
+            border-radius: 0.375rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 150ms ease;
+        }
+        
+        /* Tab styles */
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-primary);
+            background-color: var(--bg-secondary);
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 500;
+            transition: all 150ms ease;
+        }
+        
+        .tab-button:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .tab-button.active {
+            background-color: var(--button-primary-bg);
+            color: var(--button-primary-text);
+            z-index: 10;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-secondary);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-primary);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="py-8 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="shadow-container">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-heading font-bold">LinkedInsight</h1>
+                        <p class="text-sm font-mono text-secondary mt-1">AI Strategy & Implementation</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-mono text-sm text-secondary">Prepared for</p>
+                        <p class="font-heading text-xl font-bold">Lunar Solar Group</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="px-4 mb-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-heading font-bold mb-4">AI Readiness Audit Results</h2>
+                <p class="text-xl font-mono text-secondary">Two Paths to Transform Your Agency</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Executive Dashboard -->
+    <section class="px-4 mb-12">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-2xl font-heading font-bold mb-6">Executive Summary</h3>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Current State -->
+                <div class="shadow-container">
+                    <h4 class="font-mono text-lg font-bold mb-4">Current Reality</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="font-mono text-red-600 mr-2">•</span>
+                            <span><strong>40,000 keywords/week</strong> processed manually by SEM team</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-mono text-red-600 mr-2">•</span>
+                            <span><strong>2+ hours per creative brief</strong> (20min best case)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-mono text-red-600 mr-2">•</span>
+                            <span><strong>Gemini licenses unused</strong> despite company-wide access</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-mono text-red-600 mr-2">•</span>
+                            <span>Teams view AI as <strong>"more work"</strong> not less</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-mono text-red-600 mr-2">•</span>
+                            <span><strong>No systematic approach</strong> to client call insights</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Opportunity -->
+                <div class="shadow-container">
+                    <h4 class="font-mono text-lg font-bold mb-4">Transformation Opportunity</h4>
+                    <div class="space-y-4">
+                        <div class="border-2 border-black rounded p-3">
+                            <h5 class="font-mono font-bold text-green-600">Track 1: Team Literacy</h5>
+                            <p class="text-sm mt-1">Hands-on workshops with immediate wins</p>
+                            <p class="text-xs text-secondary mt-1">Unlock existing tool potential</p>
+                        </div>
+                        <div class="border-2 border-black rounded p-3">
+                            <h5 class="font-mono font-bold text-blue-600">Track 2: Custom Automations</h5>
+                            <p class="text-sm mt-1">Purpose-built solutions for LSG workflows</p>
+                            <p class="text-xs text-secondary mt-1">Dramatic time savings & consistency</p>
+                        </div>
+                        <div class="bg-black text-white rounded p-3 mt-4">
+                            <p class="font-mono font-bold">Combined Impact:</p>
+                            <p class="text-sm">Transform manual processes + empower teams</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Insights -->
+    <section class="px-4 mb-12">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-2xl font-heading font-bold mb-6">Team-Specific Insights</h3>
+            
+            <!-- Tab Navigation -->
+            <div class="flex flex-wrap gap-0 mb-6 border-b-2 border-black">
+                <button class="tab-button active" onclick="showTab('sem')" data-tab="sem">SEM</button>
+                <button class="tab-button" onclick="showTab('creative')" data-tab="creative">Creative</button>
+                <button class="tab-button" onclick="showTab('paid-social')" data-tab="paid-social">Paid Social</button>
+                <button class="tab-button" onclick="showTab('client-exp')" data-tab="client-exp">Client Experience</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="tab-content">
+                <!-- SEM Tab -->
+                <div id="sem-tab" class="tab-panel fade-in">
+                    <div class="shadow-container">
+                        <h4 class="font-mono text-xl font-bold mb-4">SEM Team Analysis</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-bold mb-2">Current Pain Points</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li>• 40,000 keywords reviewed weekly (manually)</li>
+                                    <li>• "Sparingly" using AI despite clear needs</li>
+                                    <li>• 30-40 team members doing repetitive tasks</li>
+                                    <li>• Competitor research takes hours per client</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold mb-2">Opportunities</h5>
+                                <div class="space-y-3">
+                                    <div class="bg-green-50 border border-green-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-green-600">Quick Win (Literacy)</p>
+                                        <p class="text-xs">Keyword categorization & competitor matrices</p>
+                                    </div>
+                                    <div class="bg-blue-50 border border-blue-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-blue-600">Big Win (Automation)</p>
+                                        <p class="text-xs">Automated keyword processing pipeline</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Creative Tab -->
+                <div id="creative-tab" class="tab-panel hidden">
+                    <div class="shadow-container">
+                        <h4 class="font-mono text-xl font-bold mb-4">Creative & Strategy Team Analysis</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-bold mb-2">Current Pain Points</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li>• Creative briefs take 20min - 2+ hours</li>
+                                    <li>• Cross-department bottleneck with Paid Social</li>
+                                    <li>• Inconsistent brief quality/format</li>
+                                    <li>• Already have ChatGPT Teams (underutilized)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold mb-2">Opportunities</h5>
+                                <div class="space-y-3">
+                                    <div class="bg-green-50 border border-green-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-green-600">Quick Win (Literacy)</p>
+                                        <p class="text-xs">Prompt engineering for copy hierarchies</p>
+                                    </div>
+                                    <div class="bg-blue-50 border border-blue-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-blue-600">Big Win (Automation)</p>
+                                        <p class="text-xs">Standardized brief generation system</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paid Social Tab -->
+                <div id="paid-social-tab" class="tab-panel hidden">
+                    <div class="shadow-container">
+                        <h4 class="font-mono text-xl font-bold mb-4">Paid Social Team Analysis</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-bold mb-2">Current Pain Points</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li>• Creative briefing biggest time sink</li>
+                                    <li>• Individual AI subscriptions (fragmented)</li>
+                                    <li>• Past training didn't stick (no follow-up)</li>
+                                    <li>• AI seen as "additional work"</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold mb-2">Opportunities</h5>
+                                <div class="space-y-3">
+                                    <div class="bg-green-50 border border-green-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-green-600">Quick Win (Literacy)</p>
+                                        <p class="text-xs">Screenshot analysis, data manipulation</p>
+                                    </div>
+                                    <div class="bg-blue-50 border border-blue-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-blue-600">Big Win (Automation)</p>
+                                        <p class="text-xs">Shared creative brief system with Creative team</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Experience Tab -->
+                <div id="client-exp-tab" class="tab-panel hidden">
+                    <div class="shadow-container">
+                        <h4 class="font-mono text-xl font-bold mb-4">Client Experience Team Analysis</h4>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h5 class="font-bold mb-2">Current State</h5>
+                                <ul class="space-y-2 text-sm">
+                                    <li>• Multiple client calls weekly (Solgaard pilot)</li>
+                                    <li>• No systematic sentiment tracking</li>
+                                    <li>• Reactive to client concerns</li>
+                                    <li>• Upsell opportunities missed</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-bold mb-2">Brittany's Vision (Ready to Build)</h5>
+                                <div class="space-y-3">
+                                    <div class="bg-purple-50 border border-purple-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-purple-600">Call Summaries</p>
+                                        <p class="text-xs">Auto-post to Slack channels</p>
+                                    </div>
+                                    <div class="bg-purple-50 border border-purple-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-purple-600">Sentiment Analysis</p>
+                                        <p class="text-xs">Trigger ClickUp tasks on negative sentiment</p>
+                                    </div>
+                                    <div class="bg-purple-50 border border-purple-600 rounded p-2">
+                                        <p class="font-mono text-sm font-bold text-purple-600">Upsell Detection</p>
+                                        <p class="text-xs">Flag expansion opportunities</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Priority Opportunities -->
+    <section class="px-4 mb-12">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-2xl font-heading font-bold mb-6">Priority Opportunities</h3>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Opportunity 1 -->
+                <div class="shadow-container">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-mono text-3xl font-bold">#1</span>
+                        <span class="bg-red-600 text-white px-3 py-1 rounded font-mono text-xs">HIGH IMPACT</span>
+                    </div>
+                    <h4 class="font-bold mb-2">Creative Brief Automation</h4>
+                    <p class="text-sm text-secondary mb-3">Affects Creative, Paid Social, and Operations teams</p>
+                    <div class="border-t-2 border-black pt-3">
+                        <p class="font-mono text-xs">Current: 2+ hours per brief</p>
+                        <p class="font-mono text-xs">Potential: 20-30 minutes</p>
+                    </div>
+                </div>
+
+                <!-- Opportunity 2 -->
+                <div class="shadow-container">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-mono text-3xl font-bold">#2</span>
+                        <span class="bg-purple-600 text-white px-3 py-1 rounded font-mono text-xs">READY TO BUILD</span>
+                    </div>
+                    <h4 class="font-bold mb-2">AI Call Summary System</h4>
+                    <p class="text-sm text-secondary mb-3">Brittany has clear requirements ready</p>
+                    <div class="border-t-2 border-black pt-3">
+                        <p class="font-mono text-xs">• Auto summaries to Slack</p>
+                        <p class="font-mono text-xs">• Sentiment triggers tasks</p>
+                        <p class="font-mono text-xs">• Upsell detection</p>
+                    </div>
+                </div>
+
+                <!-- Opportunity 3 -->
+                <div class="shadow-container">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-mono text-3xl font-bold">#3</span>
+                        <span class="bg-blue-600 text-white px-3 py-1 rounded font-mono text-xs">SCALE IMPACT</span>
+                    </div>
+                    <h4 class="font-bold mb-2">SEM Keyword Processing</h4>
+                    <p class="text-sm text-secondary mb-3">40,000 keywords/week bottleneck</p>
+                    <div class="border-t-2 border-black pt-3">
+                        <p class="font-mono text-xs">30-40 team members affected</p>
+                        <p class="font-mono text-xs">Hours → minutes potential</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Investment Options -->
+    <section class="px-4 mb-12">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-2xl font-heading font-bold mb-6">Investment Options</h3>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Option A -->
+                <div class="shadow-container">
+                    <h4 class="font-mono text-xl font-bold mb-4">Option A: Jumpstart Package</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <span class="text-green-600 mr-2">✓</span>
+                            <span>Team literacy workshops (2-3 hours each)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-green-600 mr-2">✓</span>
+                            <span>Prompt libraries & templates</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-green-600 mr-2">✓</span>
+                            <span>30-day follow-up assessment</span>
+                        </div>
+                        <div class="mt-4 pt-4 border-t-2 border-black">
+                            <p class="font-mono text-sm">Best for: Quick wins, team enablement</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option B -->
+                <div class="shadow-container">
+                    <h4 class="font-mono text-xl font-bold mb-4">Option B: Transformation Retainer</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <span class="text-blue-600 mr-2">✓</span>
+                            <span>Everything in Option A</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-blue-600 mr-2">✓</span>
+                            <span>AI Call Summary System (Solgaard pilot)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-blue-600 mr-2">✓</span>
+                            <span>Creative Brief Automation</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-blue-600 mr-2">✓</span>
+                            <span>Ongoing optimization & new solutions</span>
+                        </div>
+                        <div class="mt-4 pt-4 border-t-2 border-black">
+                            <p class="font-mono text-sm">Best for: Serious transformation, competitive advantage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standalone Options -->
+            <div class="mt-6">
+                <div class="shadow-container">
+                    <h4 class="font-mono text-lg font-bold mb-3">À la Carte Solutions</h4>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="border-2 border-black rounded p-3">
+                            <h5 class="font-mono font-bold text-sm">AI Call Summaries</h5>
+                            <p class="text-xs mt-1">Fireflies → Analysis → Slack/ClickUp</p>
+                            <p class="font-mono text-xs text-secondary mt-2">Timeline: 2-3 days</p>
+                        </div>
+                        <div class="border-2 border-black rounded p-3">
+                            <h5 class="font-mono font-bold text-sm">Creative Brief System</h5>
+                            <p class="text-xs mt-1">Standardized, AI-powered generation</p>
+                            <p class="font-mono text-xs text-secondary mt-2">Timeline: 1-2 weeks</p>
+                        </div>
+                        <div class="border-2 border-black rounded p-3">
+                            <h5 class="font-mono font-bold text-sm">Custom Workshop</h5>
+                            <p class="text-xs mt-1">Team-specific, hands-on training</p>
+                            <p class="font-mono text-xs text-secondary mt-2">Timeline: Flexible</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Next Steps -->
+    <section class="px-4 mb-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="shadow-container bg-black text-white">
+                <h3 class="text-2xl font-heading font-bold mb-6">Ready to Transform LSG?</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-mono text-lg font-bold mb-3">Next Steps</h4>
+                        <ol class="space-y-2 font-mono text-sm">
+                            <li>1. Review findings with your team</li>
+                            <li>2. Choose your investment path</li>
+                            <li>3. Schedule implementation kickoff</li>
+                            <li>4. Start seeing results in days, not months</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h4 class="font-mono text-lg font-bold mb-3">Get Started</h4>
+                        <p class="mb-4 text-sm">Let's discuss which approach makes sense for LSG's goals and timeline.</p>
+                        <button class="btn-primary bg-white text-black hover:bg-gray-100">
+                            Schedule Strategy Session
+                        </button>
+                        <p class="mt-4 font-mono text-xs text-gray-400">
+                            Full audit reports available below
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources -->
+    <section class="px-4 pb-12">
+        <div class="max-w-6xl mx-auto">
+            <h3 class="text-2xl font-heading font-bold mb-6">Full Audit Reports</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                <a href="markdown_reports/SEM Team AI Audit_ Strategic Findings & Recommendations.md" 
+                   class="shadow-container block hover:bg-gray-50 transition-colors">
+                    <h4 class="font-mono font-bold">SEM Team Audit</h4>
+                    <p class="text-sm text-secondary">40,000 keywords opportunity</p>
+                </a>
+                <a href="markdown_reports/Creative & Strategy Teams AI Audit_ Findings & Recommendations.md" 
+                   class="shadow-container block hover:bg-gray-50 transition-colors">
+                    <h4 class="font-mono font-bold">Creative & Strategy Audit</h4>
+                    <p class="text-sm text-secondary">Brief automation potential</p>
+                </a>
+                <a href="markdown_reports/AI Literacy Implementation_ Paid Social Team.md" 
+                   class="shadow-container block hover:bg-gray-50 transition-colors">
+                    <h4 class="font-mono font-bold">Paid Social Implementation</h4>
+                    <p class="text-sm text-secondary">Hands-on literacy approach</p>
+                </a>
+                <a href="markdown_reports/AI Call Summaries - Implementation Brief.md" 
+                   class="shadow-container block hover:bg-gray-50 transition-colors">
+                    <h4 class="font-mono font-bold">Call Summary System Spec</h4>
+                    <p class="text-sm text-secondary">Brittany's requirements ready</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white py-8 px-4">
+        <div class="max-w-6xl mx-auto text-center">
+            <p class="font-mono text-sm">© 2025 LinkedInsight | AI Strategy & Implementation</p>
+            <p class="font-mono text-xs text-gray-400 mt-2">Prepared exclusively for Lunar Solar Group</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected panel
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Add active class to clicked button
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add interactive hover effects
+        document.querySelectorAll('.shadow-container').forEach(container => {
+            container.addEventListener('mouseenter', function() {
+                this.classList.add('fade-in');
+            });
+        });
+    </script>
+</body>
+</html>
