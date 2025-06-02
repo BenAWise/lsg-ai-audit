@@ -121,6 +121,11 @@
             z-index: 10;
         }
         
+        /* Fix bottom-left corner for first tab when active */
+        .tab-button:first-child.active {
+            border-radius: 0.5rem 0.5rem 0 0.5rem;
+        }
+        
         /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
